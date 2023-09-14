@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Отчет по продажам и списаниям товаров</h2>
+
+<h3>Транзакции:</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Товар</th>
+            <th>Тип операции</th>
+            <th>Общая цена</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for transaction in transactions %}
+            <tr>
+                <td>
+                    {% for product in transaction.products.all %}
+                        {{ product.sku }} - {{ product.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{ transaction.get_transaction_type_display }}</td>
+                <td>{{ transaction.total_discounted_price }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<h3>Кредитные продажи:</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Номер договора</th>
+            <th>Товары</th>
+            <th>Оплачено</th>
+            <th>Оставшаяся сумма</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for credit_sale in credit %}
+            <tr>
+                <td>{{ credit_sale.contract_number }}</td>
+                <td>
+                    {% for product in credit_sale.products.all %}
+                        {{ product.sku }} - {{ product.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{ credit_sale.paid_amount }}</td>
+                <td>{{ credit_sale.remaining_amount_value }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<h3>Товары на складе:</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Товар</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products_in_stock %}
+            <tr>
+                <td>{{ product.sku }} - {{ product.name }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td style="text-align: right;"><strong>Всего:</strong></td>
+            <td>{{ total_in_stock }}</td>
+        </tr>
+    </tfoot>
+</table>
+
+<a href="{% url 'export_report_to_excel' %}" class="btn btn-success">Экспорт в Excel</a>
+{% endblock %}

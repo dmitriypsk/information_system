@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Список поставщиков</h2>
+  <a href="{% url 'supplier_create' %}" class="btn btn-primary">Добавить поставщика</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Название компании</th>
+        <th>Адрес</th>
+        <th>Контактная информация</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for supplier in suppliers %}
+        <tr>
+          <td>{{ supplier.name }}</td>
+          <td>{{ supplier.address }}</td>
+          <td>{{ supplier.contact_info }}</td>
+          <td>
+            <a href="{% url 'supplier_edit' supplier.pk %}" class="btn btn-sm btn-warning">Редактировать</a>
+            <a href="{% url 'supplier_delete' supplier.pk %}" class="btn btn-sm btn-danger">Удалить</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

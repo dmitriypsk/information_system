@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Платежи по кредитной продаже {{ credit_sale.contract_number }}</h2>
+  <a href="{% url 'credit_payment_create' credit_sale.id %}" class="btn btn-primary">Добавить платеж</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Дата платежа</th>
+        <th>Сумма платежа</th>
+        <th>Статус платежа</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for credit_payment in credit_payments %}
+        <tr>
+          <td>{{ credit_payment.payment_date }}</td>
+          <td>{{ credit_payment.amount }}</td>
+          <td>
+            {% if credit_payment.paid %}
+              <span class="badge badge-success">Оплачено</span>
+            {% else %}
+            <a href="{% url 'credit_payment_toggle_paid' credit_payment.id %}" class="btn btn-warning">Отметить как оплачено</a>
+            {% endif %}
+          </td>
+          <td>
+            {% if credit_payment.paid %}
+              <span>Оплачено</span>
+            {% else %}
+              <span>Не оплачено</span>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

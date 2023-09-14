@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/custom_styles.css' %}">
+    <link rel="stylesheet" href="{% static 'django_select2/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'django_select2/css/select2-bootstrap4.min.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'django_select2/js/select2.min.js' %}"></script>
+    <script src="{% static 'django_select2/js/select2.full.min.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
+    </script>
+    {% with form.products.widget.attrs as attrs %}
+    {% with css_classes=attrs.class|default:'' %}
+        <select name="{{ form.products.html_name }}" class="{{ css_classes }} form-control" multiple="multiple" id="{{ form.products.auto_id }}">
+            {% for product in form.products.field.queryset %}
+                <option value="{{ product.pk }}">{{ product }}</option>
+            {% endfor %}
+        </select>
+    {% endwith %}
+{% endwith %}
+    <script>
+      $(document).ready(function() {
+          $('select').select2({
+              minimumInputLength: 1,
+              placeholder: 'Выберите товары'
+          });
+      });
+  </script>
+{% endblock %}
+
+{% block content %}
+  <h2>Добавить кредитную продажу</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+  </form>
+{% endblock %}

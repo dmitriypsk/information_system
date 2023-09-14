@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Список товаров</h2>
+  <a href="{% url 'product_create' %}" class="btn btn-primary">Добавить товар</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Артикул</th>
+        <th>Наименование</th>
+        <th>Страна производителя</th>
+        <th>Фирма</th>
+        {% if request.session.is_director %}
+        <th>Поставщик</th>
+        {% endif %}
+        <th>Женская/Мужская</th>
+        <th>Категория</th>
+        <th>Дата поступления</th>
+        {% if request.session.is_director %}
+        <th>Цена закупки</th>
+        {% endif %}
+        <th>Цена</th>
+        <th>Цена со скидкой</th>
+        <th>Размер</th>
+        <th>Цвет</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in inventory_items %}
+        <tr>
+          <td>{{ product.sku }}</td>
+          <td>{{ product.name }}</td>
+          <td>{{ product.country_of_manufacture.name }}</td>
+          <td>{{ product.manufacturer }}</td>
+          {% if request.session.is_director %}
+          <td>{{ product.supplier }}</td>
+          {% endif %}
+          <td>{{ product.gender }}</td>
+          <td>{{ product.category }}</td>
+          <td>{{ product.date_received }}</td>
+          {% if request.session.is_director %}
+          <td>{{ product.purchase_price }}</td>
+          {% endif %}
+          <td>{{ product.sale_price }}</td>
+          <td>{{ product.discounted_price }}</td>
+          <td>{{ product.size }}</td>
+          <td>{{ product.color }}</td>
+          <td>
+            <a href="{% url 'product_update' product.pk %}" class="btn btn-warning">Редактировать</a>
+            <a href="{% url 'product_delete' product.pk %}" class="btn btn-danger">Удалить</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

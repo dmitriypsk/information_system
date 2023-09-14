@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Список транзакций</h2>
+  <a href="{% url 'transaction_create' %}" class="btn btn-primary">Добавить транзакцию</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Дата</th>
+        <th>Товары</th>
+        <th>Артикулы</th>
+        <th>Тип операции</th>
+        <th>Общая сумма</th> <!-- Добавлен новый заголовок столбца -->
+      </tr>
+    </thead>
+    <tbody>
+      {% for transaction in transactions %}
+        <tr>
+          <td>{{ transaction.date }}</td>
+          <td>
+            {% for product in transaction.products.all %}
+              {{ product.name }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </td>
+          <td>
+            {% for product in transaction.products.all %}
+              {{ product.sku }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </td>
+          <td>{{ transaction.get_transaction_type_display }}</td>
+          <td>{{ transaction.total_discounted_price }}</td> <!-- Добавлен новый столбец для отображения общей суммы -->
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

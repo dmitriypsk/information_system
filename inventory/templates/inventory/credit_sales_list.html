@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Кредитные продажи</h2>
+  <a href="{% url 'credit_sale_create' %}" class="btn btn-primary">Добавить кредитную продажу</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Номер договора</th>
+        <th>Товары</th>
+        <th>Дата продажи</th>
+        <th>Общая сумма</th>
+        <th>Оставшаяся сумма</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for credit_sale in credit_sales %}
+        <tr>
+          <td>{{ credit_sale.contract_number }}</td>
+          <td>
+            <ul>
+              {% for product in credit_sale.products.all %}
+                <li>{{ product.sku }} - {{ product.name }}</li>
+              {% endfor %}
+            </ul>
+          </td>
+          <td>{{ credit_sale.sale_date }}</td>
+          <td>{{ credit_sale.total_price }}</td>
+          <td>{{ credit_sale.remaining_amount_value }}</td>
+          <td>
+            <a href="{% url 'credit_payments_list' credit_sale.id %}" class="btn btn-info">Платежи</a>
+            <a href="{% url 'credit_return' credit_sale.id %}" class="btn btn-warning">Возврат кредита</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

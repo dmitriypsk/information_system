@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h2 class="my-4">Не погашенные кредиты</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Номер договора</th>
+                    <th>Клиент</th>
+                    <th>Товары</th>
+                    <th>Дата продажи</th>
+                    <th>Общая сумма</th>
+                    <th>Оставшаяся сумма</th>
+                    <th>Срок (месяцев)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for credit in unsettled_credit_sales %}
+                    <tr>
+                        <td>{{ credit.contract_number }}</td>
+                        <td>{{ credit.customer_name }}</td> <!-- Используйте customer_name -->
+                        <td>
+                            <ul>
+                              {% for product in credit.products.all %}
+                                <li>{{ product.sku }} - {{ product.name }}</li>
+                              {% endfor %}
+                            </ul>
+                        </td>
+                        <td>{{ credit.sale_date }}</td>
+                        <td>{{ credit.total_price }}</td>
+                        <td>{{ credit.remaining_amount_value }}</td>
+                        <td>{{ credit.credit_months }}</td> <!-- Используйте credit_months -->
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="7">Нет не погашенных кредитов.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
